@@ -34,27 +34,7 @@ class FactViewCell: UICollectionViewCell
     {
         layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.5
-        cellWidth = screenSize.width - 20
-        
-        contentView.snp.makeConstraints { (maker) in
-            maker.left.equalToSuperview()
-            maker.right.equalToSuperview()
-            maker.top.equalToSuperview()
-            maker.bottom.equalToSuperview()
-            maker.width.equalTo(cellWidth).priority(.medium)
-        }
-        
         contentView.addSubview(imgView)
-        imgView.snp.makeConstraints { (maker) in
-            maker.left.equalToSuperview()
-            maker.top.greaterThanOrEqualTo(0).priority(.medium)
-            maker.bottom.lessThanOrEqualToSuperview().priority(.medium)
-            maker.centerY.equalToSuperview()
-            maker.width.equalTo(100)
-            maker.height.equalTo(100)
-        }
-        
-
         lblTitle.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         lblDesc.font = UIFont.systemFont(ofSize: 13, weight: .light)
         lblDesc.numberOfLines = 0
@@ -65,8 +45,34 @@ class FactViewCell: UICollectionViewCell
         verticalStackView.spacing = 5
         verticalStackView.distribution = .fill
         verticalStackView.alignment = .fill
-        
         contentView.addSubview(verticalStackView)
+        addConstraints()
+    }
+    
+    func addConstraints()
+    {
+        cellWidth = screenSize.width - 20
+        
+        contentView.snp.removeConstraints()
+        contentView.snp.makeConstraints { (maker) in
+            maker.left.equalToSuperview()
+            maker.right.equalToSuperview()
+            maker.top.equalToSuperview()
+            maker.bottom.equalToSuperview()
+            maker.width.equalTo(cellWidth).priority(.medium)
+        }
+        
+        imgView.snp.removeConstraints()
+        imgView.snp.makeConstraints { (maker) in
+            maker.left.equalToSuperview()
+            maker.top.greaterThanOrEqualTo(0).priority(.medium)
+            maker.bottom.lessThanOrEqualToSuperview().priority(.medium)
+            maker.centerY.equalToSuperview()
+            maker.width.equalTo(100)
+            maker.height.equalTo(100)
+        }
+        
+        verticalStackView.snp.removeConstraints()
         verticalStackView.snp.makeConstraints { (maker) in
             maker.left.equalTo(110)
             maker.width.equalTo(cellWidth - 120)
@@ -77,6 +83,7 @@ class FactViewCell: UICollectionViewCell
     
     func configureCell(fact:Fact)
     {
+        addConstraints()
         imgView.kf.setImage(with: fact.imageHref?.url, placeholder: UIImage(named: "placeholder"))
         lblTitle.text = fact.title
         lblDesc.text = fact.description

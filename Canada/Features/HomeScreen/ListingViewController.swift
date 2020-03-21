@@ -12,22 +12,22 @@ import Kingfisher
 
 class ListingViewController: UIViewController
 {
-    let flowLayout = UICollectionViewFlowLayout()
-    var colViewFacts: UICollectionView!
-    
-    var facts = [Fact]()
+    private let refreshControl = UIRefreshControl()
+    private let flowLayout = UICollectionViewFlowLayout()
+    private var colViewFacts: UICollectionView!
+    private var facts = [Fact]()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         setUpViews()
     }
-    
-    
+
     func setUpViews()
     {
-        getCanadianFacts()
+        
         setUpCollectionView()
+        getCanadianFacts()
     }
     
     func setUpCollectionView()
@@ -37,6 +37,7 @@ class ListingViewController: UIViewController
         flowLayout.minimumInteritemSpacing = 10
         colViewFacts = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         colViewFacts.backgroundColor = UIColor.white
+        
         view.addSubview(colViewFacts)
         colViewFacts.snp.makeConstraints { (maker) in
             maker.top.equalToSuperview()
@@ -44,19 +45,24 @@ class ListingViewController: UIViewController
             maker.leading.equalTo(10)
             maker.trailing.equalTo(-10)
         }
-        colViewFacts.delegate = self
+        
         colViewFacts.dataSource = self
         colViewFacts.prefetchDataSource = self
         colViewFacts.register(FactViewCell.self, forCellWithReuseIdentifier: "cell")
+        colViewFacts.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(getCanadianFacts), for: .valueChanged)
+
     }
     
     
-    func getCanadianFacts()
+    @objc func getCanadianFacts()
     {
+        refreshControl.beginRefreshing()
         guard let url = Constants.URLS.BASE_URL.url else { return }
         NetworkLayer.shared.getFacts(url: url, method: .get)
         { [weak self] (response, message) in
             
+            self?.refreshControl.endRefreshing()
             if let res = response
             {
                 self?.title = res.title
@@ -69,9 +75,18 @@ class ListingViewController: UIViewController
             }
         }
     }
+    
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
+    {
+        super.viewWillTransition(to: size, with: coordinator)
+        colViewFacts.reloadData()
+    }
+    
+
 }
 
-extension ListingViewController: UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDataSourcePrefetching
+extension ListingViewController: UICollectionViewDataSource,UICollectionViewDataSourcePrefetching
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
