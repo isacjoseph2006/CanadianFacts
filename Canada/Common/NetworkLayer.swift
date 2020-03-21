@@ -35,7 +35,7 @@ class NetworkLayer: NSObject
      */
     func getFacts(url:URL, method : HTTPMethod,completion: @escaping (_ result: FactsResponse?, _ error: String?) -> Void)
     {
-        let request = alamofireManager.request(url, method:method, parameters:nil, encoding: URLEncoding.default, headers: nil).responseJSON
+        alamofireManager.request(url, method:method, parameters:nil, encoding: URLEncoding.default, headers: nil).responseJSON
             { response in
                 guard let data = response.data,response.error == nil else
                 {
@@ -52,6 +52,5 @@ class NetworkLayer: NSObject
                     completion(nil, error.localizedDescription)
                 }
         }
-        debugPrint(request)
     }
 }

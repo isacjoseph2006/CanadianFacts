@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class ListingViewController: UIViewController
 {
@@ -31,18 +32,21 @@ class ListingViewController: UIViewController
     
     func setUpCollectionView()
     {
+        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        flowLayout.scrollDirection = .vertical
         flowLayout.minimumInteritemSpacing = 10
-        colViewFacts = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        colViewFacts = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         colViewFacts.backgroundColor = UIColor.white
         view.addSubview(colViewFacts)
         colViewFacts.snp.makeConstraints { (maker) in
             maker.top.equalToSuperview()
             maker.bottom.equalToSuperview()
-            maker.leading.equalToSuperview()
-            maker.trailing.equalToSuperview()
+            maker.leading.equalTo(10)
+            maker.trailing.equalTo(-10)
         }
         colViewFacts.delegate = self
         colViewFacts.dataSource = self
+        colViewFacts.prefetchDataSource = self
         colViewFacts.register(FactViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
@@ -67,7 +71,7 @@ class ListingViewController: UIViewController
     }
 }
 
-extension ListingViewController: UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource
+extension ListingViewController: UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDataSourcePrefetching
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
@@ -77,14 +81,16 @@ extension ListingViewController: UICollectionViewDelegateFlowLayout,UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! FactViewCell
-        cell.backgroundColor = UIColor.yellow
+        cell.configureCell(fact: facts[indexPath.row])
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath])
     {
-        return CGSize(width: screenSize.width, height: 100)
+        let urls = indexPaths.compactMap {indexPath in
+            return facts[indexPath.row].imageHref?.url
+        }
+        let prefetcher = ImagePrefetcher(resources: urls)
+        prefetcher.start()
     }
-    
 }
-

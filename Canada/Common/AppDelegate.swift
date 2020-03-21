@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.backgroundColor = .white
         let rootViewController = ListingViewController()
-        rootViewController.view.backgroundColor = UIColor.green
         let navController = UINavigationController(rootViewController: rootViewController)
         window?.rootViewController = navController
         window?.makeKeyAndVisible()
