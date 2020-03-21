@@ -78,7 +78,10 @@
 		4B9A6D472424FC1C00A91BB1 /* Canada */ = {
 			isa = PBXGroup;
 			children = (
-				4B9A6D5D2425022C00A91BB1 /* Features */,
+				4B9A6D5D2425022C00A91BB1 /* ViewControllers */,
+				4B9A6D6B2425FA0700A91BB1 /* Network */,
+				4B9A6D5F2425025200A91BB1 /* Modals */,
+				4B9A6D6C2425FA1D00A91BB1 /* Others */,
 				4B9A6D5C2425022500A91BB1 /* Common */,
 				4B9A6D512424FC2000A91BB1 /* Assets.xcassets */,
 				4B9A6D532424FC2000A91BB1 /* LaunchScreen.storyboard */,
@@ -90,21 +93,18 @@
 		4B9A6D5C2425022500A91BB1 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				4B9A6D5F2425025200A91BB1 /* Modals */,
-				4B9A6D482424FC1C00A91BB1 /* AppDelegate.swift */,
-				4B9A6D622425030F00A91BB1 /* NetworkLayer.swift */,
 				4B9A6D662425077100A91BB1 /* AppExtensions.swift */,
 				4B9A6D642425071500A91BB1 /* Constants.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
 		};
-		4B9A6D5D2425022C00A91BB1 /* Features */ = {
+		4B9A6D5D2425022C00A91BB1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				4B9A6D5E2425023400A91BB1 /* HomeScreen */,
 			);
-			path = Features;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		4B9A6D5E2425023400A91BB1 /* HomeScreen */ = {
@@ -130,6 +130,22 @@
 				4B9A6D692425176E00A91BB1 /* FactViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		4B9A6D6B2425FA0700A91BB1 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				4B9A6D622425030F00A91BB1 /* NetworkLayer.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		4B9A6D6C2425FA1D00A91BB1 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				4B9A6D482424FC1C00A91BB1 /* AppDelegate.swift */,
+			);
+			path = Others;
 			sourceTree = "<group>";
 		};
 		567D7C2AD1DDC551CFA59162 /* Frameworks */ = {

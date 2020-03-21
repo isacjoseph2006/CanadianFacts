@@ -11,12 +11,11 @@ import Kingfisher
 
 class FactViewCell: UICollectionViewCell
 {
-    let imgView = UIImageView()
-    let verticalStackView = UIStackView()
-    let lblTitle = UILabel()
-    let lblDesc = UILabel()
-    
-    var cellWidth:CGFloat = 0.0
+    private let imgView = UIImageView()
+    private let verticalStackView = UIStackView()
+    private let lblTitle = UILabel()
+    private let lblDesc = UILabel()
+    private var cellWidth:CGFloat = 0.0
     
     override init(frame: CGRect)
     {
@@ -30,13 +29,16 @@ class FactViewCell: UICollectionViewCell
         setUpViews()
     }
     
-    func setUpViews()
+    /*
+     * Setup inital views
+     */
+    private func setUpViews()
     {
         layer.borderColor = UIColor.lightGray.cgColor
         layer.borderWidth = 0.5
         contentView.addSubview(imgView)
-        lblTitle.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
-        lblDesc.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        lblTitle.font = isIpad ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 15, weight: .semibold)
+        lblDesc.font = isIpad ? UIFont.systemFont(ofSize: 15, weight: .light) : UIFont.systemFont(ofSize: 13, weight: .light)
         lblDesc.numberOfLines = 0
         lblTitle.numberOfLines = 0
         verticalStackView.axis = .vertical
@@ -49,9 +51,20 @@ class FactViewCell: UICollectionViewCell
         addConstraints()
     }
     
-    func addConstraints()
+    
+    /*
+    * Adding required constraints
+    */
+    private func addConstraints()
     {
-        cellWidth = screenSize.width - 20
+        var availableWidth = screenSize.width - 20
+        
+        if isLandscape
+        {
+            availableWidth = availableWidth - safeArea.left - safeArea.right
+        }
+            
+        cellWidth = isIpad ? (availableWidth - 10) / 2  : availableWidth
         
         contentView.snp.removeConstraints()
         contentView.snp.makeConstraints { (maker) in
@@ -62,30 +75,44 @@ class FactViewCell: UICollectionViewCell
             maker.width.equalTo(cellWidth).priority(.medium)
         }
         
+        let imgSize:CGFloat = isIpad ? 200 : 100
         imgView.snp.removeConstraints()
         imgView.snp.makeConstraints { (maker) in
             maker.left.equalToSuperview()
             maker.top.greaterThanOrEqualTo(0).priority(.medium)
             maker.bottom.lessThanOrEqualToSuperview().priority(.medium)
             maker.centerY.equalToSuperview()
-            maker.width.equalTo(100)
-            maker.height.equalTo(100)
+            maker.width.equalTo(imgSize)
+            maker.height.equalTo(imgSize)
         }
         
         verticalStackView.snp.removeConstraints()
         verticalStackView.snp.makeConstraints { (maker) in
-            maker.left.equalTo(110)
-            maker.width.equalTo(cellWidth - 120)
+            maker.left.equalTo(imgSize + 10)
+            maker.width.equalTo(cellWidth - imgSize - 20)
             maker.top.equalTo(10)
             maker.bottom.lessThanOrEqualTo(-10)
         }
     }
     
+    /*
+    * Configure cell with values from modal
+    */
     func configureCell(fact:Fact)
     {
         addConstraints()
         imgView.kf.setImage(with: fact.imageHref?.url, placeholder: UIImage(named: "placeholder"))
         lblTitle.text = fact.title
         lblDesc.text = fact.description
+    }
+    
+    /*
+    * Set default values before resuing
+    */
+    override func prepareForReuse()
+    {
+        lblTitle.text = nil
+        lblDesc.text = nil
+        imgView.image = nil
     }
 }

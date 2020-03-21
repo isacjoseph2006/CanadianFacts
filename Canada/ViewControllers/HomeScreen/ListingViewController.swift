@@ -23,14 +23,16 @@ class ListingViewController: UIViewController
         setUpViews()
     }
 
-    func setUpViews()
+    private func setUpViews()
     {
-        
         setUpCollectionView()
         getCanadianFacts()
     }
     
-    func setUpCollectionView()
+    /*
+    * Setup views
+    */
+    private func setUpCollectionView()
     {
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .vertical
@@ -54,8 +56,10 @@ class ListingViewController: UIViewController
 
     }
     
-    
-    @objc func getCanadianFacts()
+    /*
+    * Fetch data from service
+    */
+    @objc private func getCanadianFacts()
     {
         refreshControl.beginRefreshing()
         guard let url = Constants.URLS.BASE_URL.url else { return }
@@ -71,21 +75,29 @@ class ListingViewController: UIViewController
             }
             else
             {
-                //TODO: Handle error here
+                if let msg = message
+                {
+                    self?.displayAlert(msg: msg)
+                }
             }
         }
     }
     
     
+    /*
+    * Need to reconfigure while device is rotated
+    */
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
         super.viewWillTransition(to: size, with: coordinator)
         colViewFacts.reloadData()
     }
-    
-
 }
 
+
+/*
+* Collectionview datasources
+*/
 extension ListingViewController: UICollectionViewDataSource,UICollectionViewDataSourcePrefetching
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int

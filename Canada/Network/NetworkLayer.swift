@@ -31,7 +31,7 @@ class NetworkLayer: NSObject
     }
     
     /*
-     * A common function too handle all kind of requests and return a
+     * Fetch facts from service
      */
     func getFacts(url:URL, method : HTTPMethod,completion: @escaping (_ result: FactsResponse?, _ error: String?) -> Void)
     {
